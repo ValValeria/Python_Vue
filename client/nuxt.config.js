@@ -43,8 +43,14 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/proxy'
   ],
-
+  proxy: {
+    "/api/": {
+      target: 'http://127.0.0.1:8000',
+      pathRewrite: { "^/api/": "" }
+    }
+  },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
