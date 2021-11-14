@@ -4,7 +4,7 @@ import numpy as np
 class ResponseObject:
     def __init__(self):
         self.__errors = []
-        self.__data = {"result": [], "info": []}
+        self.__data = {"result": [], "info": {}}
 
     @property
     def errors(self):
@@ -18,4 +18,12 @@ class ResponseObject:
         self.__data["result"].extend(data)
 
     def add_info(self, data):
-        self.__data["info"].extend(data)
+        self.__data["info"].update(data)
+
+    @property
+    def data_list(self):
+        return {
+            'data': self.data,
+            'errors': self.errors
+        }
+

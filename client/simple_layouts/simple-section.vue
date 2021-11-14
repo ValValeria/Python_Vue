@@ -1,0 +1,42 @@
+<template>
+  <section class="section w-100 center">
+      <section class="section__container center">
+        <section class="section__title text-h2 text-center mb-6 pb-3 text--white" v-if="title && title.length">
+          {{title}}
+        </section>
+        <section class="section__content w-100">
+          <slot></slot>
+        </section>
+      </section>
+  </section>
+</template>
+
+<script>
+export default{
+  props:{
+    title: String,
+    required: false,
+    default: ''
+  }
+}
+</script>
+
+<style lang="scss">
+.section{
+  min-height:93vh;
+}
+
+.center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.section__container{
+  padding: 48px 0;
+  width: 90%;
+  margin: 0 auto;
+  max-width: 900px;
+}
+</style>

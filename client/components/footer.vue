@@ -1,11 +1,14 @@
 <template>
-  <v-footer>
+  <v-footer
+     v-if="show"
+  >
     <v-card
       flat
       width="100%"
-      class="text-center">
+      class="text-center"
+    >
       <v-card-text class="white--text">
-        {{ new Date().getFullYear() }} — <strong>JSDevelopment</strong>
+        {{ new Date().getFullYear() }} — <strong>DEV </strong>Prog
       </v-card-text>
     </v-card>
   </v-footer>
@@ -14,6 +17,16 @@
 <script>
 export default {
   name: "footer",
+  data: function(){
+    return {
+      show: true
+    };
+  },
+  watch: {
+    $route: (to, from) => {
+      this.show = this.$route.path !== '/';
+    }
+  }
 }
 </script>
 

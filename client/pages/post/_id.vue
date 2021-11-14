@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import SimpleSection from "../../layouts/simple-section";
+import SimpleSection from "../../simple_layouts/simple-section";
+
 export default {
   data: function(){
     return {post: {}}

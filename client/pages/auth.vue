@@ -54,8 +54,8 @@
 
 <script>
 import { mapMutations } from 'vuex';
-import {LOGIN_MUTATION} from "../store/mutations";
-import SimpleSection from "../layouts/simple-section";
+import {LOGIN_MUTATION} from "../store/";
+import SimpleSection from "../simple_layouts/simple-section";
 
 export default {
   data: function(){

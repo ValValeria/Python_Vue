@@ -1,8 +1,8 @@
-import {LOGIN_MUTATION} from "~/store/mutations";
+export const LOGIN_MUTATION = Symbol();
 
 export const state = () => ({
    user: {username: '', email: '', id: 0, password: ''},
-   isAuth: false
+   isAuth: false,
 });
 
 export const mutations = {

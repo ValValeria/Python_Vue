@@ -3,6 +3,7 @@
     absolute
     elevate-on-scroll
     black
+    app
   >
     <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
