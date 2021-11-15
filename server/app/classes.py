@@ -3,8 +3,10 @@ import numpy as np
 
 class ResponseObject:
     def __init__(self):
-        self.__errors = []
         self.__data = {"result": [], "info": {}}
+        self.__errors = []
+        self.status = ''
+        self.setup_data()
 
     @property
     def errors(self):
@@ -22,8 +24,14 @@ class ResponseObject:
 
     @property
     def data_list(self):
-        return {
-            'data': self.data,
-            'errors': self.errors
+        data = {
+            'data': dict(self.__data),
+            'errors': list(self.__errors)
         }
 
+        return data
+
+    def setup_data(self):
+        self.__errors.clear()
+        self.__data["info"].clear()
+        self.__data["result"].clear()

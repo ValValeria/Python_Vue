@@ -15,10 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from app.views import PostsView, SearchView
+from app.views import PostsView, SearchView, PostView, AddLikesView, CommentsView, AddCommentView, GetLikesView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    re_path(r'^api/posts/(?P<id>\d+)', PostView.as_view()),
     re_path(r'^api/posts', PostsView.as_view()),
+    re_path(r'^api/likes', AddLikesView.as_view()),
+    re_path(r'^api/comments', CommentsView.as_view()),
+    re_path(r'^api/comment', AddCommentView.as_view()),
+    re_path(r'^api/user-likes', GetLikesView.as_view()),
     re_path(r'^api/search', SearchView.as_view())
 ]
