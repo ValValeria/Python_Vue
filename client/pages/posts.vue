@@ -31,7 +31,6 @@ export default {
   async fetch(){
     const json = await this.$axios.get(`/api/posts?page=${this.page}&per_page=${this.per_page}`);
     const posts = json.data.data.result;
-    console.log(json)
     this.posts.push(...posts);
   },
   methods:{

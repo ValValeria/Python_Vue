@@ -48,8 +48,7 @@ class PostView(ListView):
         self.responseObj.setup_data()
 
         if post is not None:
-            obj = {"post": post}
-            self.responseObj.data['result'].extend(obj)
+            self.responseObj.data['result'].append(post)
 
         return JsonResponse(self.responseObj.data_list, safe=False)
 
