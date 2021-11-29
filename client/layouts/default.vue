@@ -24,10 +24,11 @@
 </template>
 
 <script>
-import footer from "../components/footer";
-import header from "../components/header";
+import Footer from "../components/custom-footer";
+import Header from "../components/custom-header";
 import banner from "../components/banner";
 import {showSnackbar$} from "../subjects";
+import '../assets/styles.scss';
 
 export default {
   data: function(){
@@ -37,8 +38,8 @@ export default {
     }
   },
   components:{
-    Footer: footer,
-    Header: header,
+    Footer,
+    Header,
     Banner: banner
   },
   mounted(){

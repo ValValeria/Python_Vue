@@ -11,7 +11,7 @@
         {{content.slice(0, 30)}}
       </v-card-text>
       <v-card-text>
-        <v-btn>Read more</v-btn>
+        <v-btn @click="navigate()">Read more</v-btn>
       </v-card-text>
     </v-card>
   </div>
@@ -36,5 +36,12 @@ export default{
       type: String
     }
   },
+  methods: {
+    navigate(){
+      this.$nextTick(async () => {
+        await this.$router.push(`/post/${this.id}`);
+      });
+    }
+  }
 }
 </script>

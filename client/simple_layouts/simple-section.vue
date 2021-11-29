@@ -1,13 +1,13 @@
 <template>
   <section class="section w-100 center">
-      <section class="section__container center">
-        <section class="section__title text-h2 text-center mb-6 pb-3 text--white" v-if="title && title.length">
+      <div class="section__container center w-100">
+        <div class="section__title text-h2 text-center mb-6 pb-3 text--white" v-if="title && title.length">
           {{title}}
-        </section>
-        <section class="section__content w-100">
+        </div>
+        <div class="section__content w-100">
           <slot></slot>
-        </section>
-      </section>
+        </div>
+      </div>
   </section>
 </template>
 

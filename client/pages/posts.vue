@@ -1,8 +1,8 @@
 <template>
 <div class="posts w-100">
   <SimpleSection title="Posts">
-       <v-layout column class="w-100">
-         <v-flex xs12 md12 v-for="post in posts" :key="Math.random()">
+       <v-layout column class="w-100" v-if="!$fetchState.pending && !$fetchState.error">
+         <v-flex xs12 md12 v-for="post in posts" :key="Math.random()" class="w-100">
            <PostCard
              :title="post.title"
              :image="post.image"
@@ -15,6 +15,13 @@
          <v-flex xs12 md4 v-if="posts.length" class="mt-6" align-self-center>
             <v-btn @click="nextPage()" outlined>More posts</v-btn>
          </v-flex>
+       </v-layout>
+       <v-layout column class="w-100" justify-center align-center v-else>
+         <v-progress-circular
+           :size="50"
+           color="amber"
+           indeterminate
+         ></v-progress-circular>
        </v-layout>
   </SimpleSection>
 </div>

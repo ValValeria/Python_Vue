@@ -43,7 +43,7 @@ class PostView(ListView):
 
     def get(self, request, *args, **kwargs):
         post_id = kwargs['id']
-        post = Post.objects.filter(id=int(post_id))[0]
+        post = Post.objects.filter(id=int(post_id)).values()[0]
 
         self.responseObj.setup_data()
 
