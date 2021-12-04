@@ -51,9 +51,9 @@ export default {
       target: 'http://127.0.0.1:8000',
       pathRewrite: { "^/api/": "/api/" }
     },
-    "/static/": {
+    "/app/static/": {
       target: 'http://127.0.0.1:8000',
-      pathRewrite: { "^/static/": "/static/" }
+      pathRewrite: { "^/app/static/": "/app/static/" }
     },
   },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

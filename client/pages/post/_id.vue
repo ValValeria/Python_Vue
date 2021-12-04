@@ -3,41 +3,46 @@
     <div class="post__elements" hidden>
       <p id="paragraph" class="text-md-body-1"></p>
       <h4 id="title" class="text--h4"></h4>
-      <v-card flat id="code">
-        <v-card-actions class="code__container pa-3 flex-column justify-start align-start">
+      <v-alert id="code"
+               border="left"
+               colored-border
+               type="warning">
+        <div class="code__container pa-3 flex-column justify-start align-start">
           <div hidden class="code__item text-md-body-1 mb-1"></div>
-        </v-card-actions>
-      </v-card>
+        </div>
+      </v-alert>
     </div>
-    <SimpleSection :title="post.title" v-if="post.title">
+    <Navigation v-show="shouldShow"/>
+    <SimpleSection :title="post.title" v-show="shouldShow">
       <div class="w-100">
         <div class="post__container w-100">
           <div class="post__main-content">
             <v-layout column>
-              <v-flex xs12 md12>
+              <v-flex xs12 md12 class="mb-2">
                 <h3 class="text--white" @click="navigateToCategories()">Category:
                   <span class="text-lg-subtitle-1"> {{post.category}}</span>
                 </h3>
               </v-flex>
-              <v-flex xs12 md12>
-                <v-img
-                  :src="post.image"
-                  max-height="300"
-                  class="w-100"
-                >
-                  <template v-slot:placeholder>
-                    <v-row
-                      class="fill-height ma-0"
-                      align="center"
-                      justify="center"
-                    >
-                      <v-progress-circular
-                        indeterminate
-                        color="grey lighten-5"
-                      ></v-progress-circular>
-                    </v-row>
-                  </template>
-                </v-img>
+              <v-flex xs12 md12 class="mb-4">
+                <v-card flat>
+                  <v-img
+                    :src="post.image"
+                    max-height="300"
+                    class="w-100">
+                    <template v-slot:placeholder>
+                      <v-row
+                        class="fill-height ma-0"
+                        align="center"
+                        justify="center"
+                      >
+                        <v-progress-circular
+                          indeterminate
+                          color="grey lighten-5"
+                        ></v-progress-circular>
+                      </v-row>
+                    </template>
+                  </v-img>
+                </v-card>
               </v-flex>
               <v-flex xs12 md12>
                 <div class="post__content" id="container"></div>
@@ -47,7 +52,7 @@
         </div>
       </div>
     </SimpleSection>
-    <SimpleSection v-else>
+    <SimpleSection v-if="!shouldShow">
       <v-layout class="w-100 mt-3" justify-center align-center>
         <v-progress-circular
           :size="50"
@@ -62,12 +67,17 @@
 import SimpleSection from "../../simple_layouts/simple-section";
 import {showSnackbar$} from "../../subjects";
 import {first, interval} from "rxjs";
+import ComponentSection from "../../simple_layouts/component-section";
+import Navigation from "../../components/navigation";
 
 export default {
   data: function(){
-    return {post: {}}
+    return {
+      post: {},
+      shouldShow: false
+    }
   },
-  components: {SimpleSection},
+  components: {Navigation, SimpleSection, ComponentSection},
   async asyncData(context) {
     const id = context.params.id;
     const response = await context.$axios.get(`/api/posts/${id}`);
@@ -85,12 +95,21 @@ export default {
         });
     }
   },
-  async beforeMount(){
-    document.addEventListener("readystatechange", () => {
-      if (document.readyState === "complete" && this.post.title){
+  async beforeCreate(){
+    if(process.client) {
+      document.addEventListener("readystatechange", () => {
+        if (document.readyState === "complete"){
+          this.loadContent(this.post);
+        }
+      });
+    }
+  },
+  watch: {
+    post(prevVal, val) {
+      if(document.readyState === "complete") {
         this.loadContent(this.post);
       }
-    });
+    }
   },
   methods: {
     loadContent(post){
@@ -122,7 +141,6 @@ export default {
 
             element.querySelector('.code__container').append(lineElement);
           });
-
         } else if(tagName === "title") {
           element = title.cloneNode(true);
           element.textContent = childNode.textContent;
@@ -132,6 +150,8 @@ export default {
            container.append(element);
         }
       }
+
+      this.shouldShow = true;
     },
     navigateToCategories() {
       this.$router.push(`/category/` + encodeURIComponent(this.post.category));

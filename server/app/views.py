@@ -166,7 +166,7 @@ class SearchView(ListView):
 
 class CarouselView(ListView):
     responseObj = ResponseObject()
-    allowed_pages = ()
+    allowed_pages = ("posts", "post", "categories")
 
     def get(self, request, *args, **kw):
         page = request.GET.get('page_type')
@@ -175,6 +175,8 @@ class CarouselView(ListView):
         if page not in self.allowed_pages:
             return HttpResponseNotFound()
 
-        self.responseObj.add_results(list(Carousel.objects.filter(page_type=page).values()))
+        images = list(Carousel.objects.filter(page=page).values())
+        self.responseObj.add_results(images)
+
         return JsonResponse(self.responseObj.data_list, safe=False)
 

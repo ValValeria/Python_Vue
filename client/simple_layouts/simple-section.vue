@@ -26,13 +26,6 @@ export default{
   min-height:93vh;
 }
 
-.center{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
 .section__container{
   padding: 48px 0;
   width: 90%;

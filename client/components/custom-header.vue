@@ -5,7 +5,7 @@
     black
     app
   >
-    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
     <v-toolbar-title class="text--black"><b>Dev </b>Prog</v-toolbar-title>
 
@@ -22,7 +22,24 @@
 </template>
 
 <script>
-export default{
+import {showMenu$} from "../subjects";
 
+export default{
+  data: function() {
+    return {
+      show: false
+    }
+  },
+  computed: {
+    drawer: {
+      get() {
+        return this.show;
+      },
+      set(value) {
+        this.show = value;
+        showMenu$.next(value);
+      }
+    }
+  }
 }
 </script>

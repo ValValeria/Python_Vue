@@ -34,6 +34,9 @@ class Carousel(models.Model):
     created_at = models.DateTimeField()
     page = models.CharField(choices=pages, max_length=50)
 
+    def __str__(self):
+        return self.title
+
 
 class Comment(models.Model):
     content = models.CharField(max_length=200)
@@ -41,3 +44,6 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     time = models.DateTimeField()
     objects = models.Manager
+
+    def __str__(self):
+        return self.title

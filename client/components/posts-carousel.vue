@@ -1,39 +1,63 @@
 <template>
-  <v-carousel v-model="model" class="w-100">
+  <v-carousel v-model="model"
+              class="w-100"
+              height="400"
+              v-if="shouldShow ? shouldShow : true">
     <v-carousel-item
-      v-for="(color, i) in colors"
-      :key="color"
-    >
-      <v-sheet
-        :color="color"
-        height="100%"
-        tile
-      >
-        <v-row
-          class="fill-height"
-          align="center"
-          justify="center"
-        >
-          <div class="text-h2">
-            Slide {{ i + 1 }}
-          </div>
-        </v-row>
-      </v-sheet>
+      v-for="image in images"
+      :key="image.title"
+      height="400">
+      <v-img
+        :src="image.image"
+        max-width="100%"
+        height="400">
+        <template v-slot:placeholder>
+          <v-row
+            class="fill-height ma-0"
+            align="center"
+            justify="center">
+            <v-progress-circular
+              indeterminate
+              color="grey lighten-5"
+            ></v-progress-circular>
+          </v-row>
+        </template>
+      </v-img>
     </v-carousel-item>
   </v-carousel>
 </template>
 
 <script>
 export default {
-  data: () => ({
-    model: 0,
-    colors: [
-      'primary',
-      'secondary',
-      'yellow darken-2',
-      'red',
-      'orange',
-    ],
-  }),
+  data: function() {
+    return {
+      model: 0,
+      images: [],
+      shouldShow: false
+    }
+  },
+  props: {
+    page_type: {
+      type: String
+    }
+  },
+  async mounted() {
+    await this.load();
+  },
+  watch: {
+    async page_type() {
+      await this.load();
+    }
+  },
+  methods: {
+    async load() {
+      const data = await this.$axios.get(`/api/carousel?page_type=`+encodeURIComponent(this.page_type));
+      this.images = data.data.data.result;
+
+      if(this.images && this.images.length) {
+        this.shouldShow = true;
+      }
+    },
+  }
 }
 </script>
