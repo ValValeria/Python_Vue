@@ -22,11 +22,22 @@ class Post(models.Model):
         return self.title
 
 
+class Carousel(models.Model):
+    pages = (
+        ("posts", "posts"),
+        ("post", "post"),
+        ("categories", "categories")
+    )
+    title = models.CharField(max_length=50)
+    image = models.ImageField(upload_to="app/static/images")
+    link = models.CharField(max_length=200)
+    created_at = models.DateTimeField()
+    page = models.CharField(choices=pages, max_length=50)
+
+
 class Comment(models.Model):
     content = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     time = models.DateTimeField()
     objects = models.Manager
-
-

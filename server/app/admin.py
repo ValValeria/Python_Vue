@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 
-from .models import Post, Comment
+from .models import Post, Comment, Carousel
 from django.utils.html import format_html
 
 admin.site.unregister(User)
@@ -28,6 +28,12 @@ class CommentAdmin(admin.ModelAdmin):
         return format_html('<a href={} class="btn-link">View post</a>', "/admin/auth/post/{}/change/".format(obj.id));
 
 
+@admin.register(Carousel)
+class CarouselAdmin(admin.ModelAdmin):
+    list_filter = ('title', 'link')
+    list_display = ("id", "page", "created_at")
+
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('ID', "email", "role", "last_join", "comments", "likes")
@@ -49,7 +55,7 @@ class UserAdmin(admin.ModelAdmin):
         return obj.last_login
 
     def get_queryset(self, request):
-        return super().get_queryset(request).exclude(id=request.user.id)
+        return self.get_queryset(request).exclude(id=request.user.id)
 
     def likes(self, obj):
         return obj.post_set.all().count()

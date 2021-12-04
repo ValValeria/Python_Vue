@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.views.generic.list import ListView
 
 from .forms import CommentForm
-from .models import Post, Comment
+from .models import Post, Comment, Carousel
 from django.views.generic.detail import DetailView
 from django.core.paginator import Paginator
 from .classes import ResponseObject
@@ -162,3 +162,19 @@ class SearchView(ListView):
             return JsonResponse(self.responseObj.data_list, safe=False)
 
         return HttpResponseForbidden()
+
+
+class CarouselView(ListView):
+    responseObj = ResponseObject()
+    allowed_pages = ()
+
+    def get(self, request, *args, **kw):
+        page = request.GET.get('page_type')
+        self.responseObj.setup_data()
+
+        if page not in self.allowed_pages:
+            return HttpResponseNotFound()
+
+        self.responseObj.add_results(list(Carousel.objects.filter(page_type=page).values()))
+        return JsonResponse(self.responseObj.data_list, safe=False)
+
