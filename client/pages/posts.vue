@@ -2,7 +2,10 @@
 <div class="posts w-100">
   <SimpleSection title="Posts">
        <v-layout column class="w-100" v-if="!$fetchState.pending && !$fetchState.error">
-         <v-flex xs12 md12 v-for="post in posts" :key="Math.random()" class="w-100">
+         <v-flex xs12 md12 class="mb-2 w-100">
+           <PostsCarousel/>
+         </v-flex>
+         <v-flex xs12 md12 v-for="post in posts" :key="getRandom()" class="w-100">
            <PostCard
              :title="post.title"
              :image="post.image"
@@ -11,7 +14,6 @@
              :id="post.id"
            />
          </v-flex>
-
          <v-flex xs12 md4 v-if="posts.length" class="mt-6" align-self-center>
             <v-btn @click="nextPage()" outlined>More posts</v-btn>
          </v-flex>
@@ -30,6 +32,7 @@
 <script>
 import SimpleSection from '../simple_layouts/simple-section';
 import PostCard from "../components/post-card";
+import PostsCarousel from "../components/posts-carousel";
 
 export default {
   data(){
@@ -41,13 +44,16 @@ export default {
     this.posts.push(...posts);
   },
   methods:{
-    nextPage(){
+    nextPage() {
       this.page++;
-
       this.$nuxt.refresh();
     },
+    getRandom() {
+      return Math.random() ;
+    }
   },
   components:{
+    PostsCarousel,
     PostCard,
     SimpleSection
   }

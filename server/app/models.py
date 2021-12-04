@@ -11,7 +11,7 @@ class Post(models.Model):
         ("other", "other"),
     )
     title = models.CharField(max_length=50)
-    image = models.ImageField(upload_to="")
+    image = models.ImageField(upload_to="app/static/images")
     category = models.CharField(choices=categories, default="js", max_length=30)
     stars = models.IntegerField()
     content = models.TextField(max_length=4000)

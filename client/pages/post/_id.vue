@@ -1,19 +1,23 @@
 <template>
   <div class="post w-100">
+    <div class="post__elements" hidden>
+      <p id="paragraph" class="text-md-body-1"></p>
+      <h4 id="title" class="text--h4"></h4>
+      <v-card flat id="code">
+        <v-card-actions class="code__container pa-3 flex-column justify-start align-start">
+          <div hidden class="code__item text-md-body-1 mb-1"></div>
+        </v-card-actions>
+      </v-card>
+    </div>
     <SimpleSection :title="post.title" v-if="post.title">
-      <div class="w-100" v-if="post.title">
-        <div class="post__elements" hidden>
-          <p ref="paragraph"></p>
-          <h3 ref="title text--h2"></h3>
-          <ul ref="code">
-            <li hidden></li>
-          </ul>
-        </div>
+      <div class="w-100">
         <div class="post__container w-100">
           <div class="post__main-content">
             <v-layout column>
               <v-flex xs12 md12>
-                <h3 class="text--white">{{post.title}}</h3>
+                <h3 class="text--white" @click="navigateToCategories()">Category:
+                  <span class="text-lg-subtitle-1"> {{post.category}}</span>
+                </h3>
               </v-flex>
               <v-flex xs12 md12>
                 <v-img
@@ -36,13 +40,15 @@
                 </v-img>
               </v-flex>
               <v-flex xs12 md12>
-                <div class="post__content" ref="container"></div>
+                <div class="post__content" id="container"></div>
               </v-flex>
             </v-layout>
           </div>
         </div>
       </div>
-      <v-layout class="w-100 mt-3" justify-center align-center v-else>
+    </SimpleSection>
+    <SimpleSection v-else>
+      <v-layout class="w-100 mt-3" justify-center align-center>
         <v-progress-circular
           :size="50"
           color="amber"
@@ -62,7 +68,7 @@ export default {
     return {post: {}}
   },
   components: {SimpleSection},
-  async fetch(context){
+  async asyncData(context) {
     const id = context.params.id;
     const response = await context.$axios.get(`/api/posts/${id}`);
     const data = response.data.data.result[0];
@@ -75,52 +81,61 @@ export default {
       interval(500)
         .pipe(first())
         .subscribe(async v => {
-          await this.$router.push('/');
+          await context.$router.push('/');
         });
     }
   },
+  async beforeMount(){
+    document.addEventListener("readystatechange", () => {
+      if (document.readyState === "complete" && this.post.title){
+        this.loadContent(this.post);
+      }
+    });
+  },
   methods: {
-    loadContent(){
-      const elements = {
-        container: this.$refs.container,
-        paragraph: this.$refs.paragraph,
-        code: this.$refs.code,
-        title: this.refs.title
-      };
+    loadContent(post){
+      const container = document.getElementById('container');
+      const paragraph = document.getElementById('paragraph');
+      const code = document.getElementById('code');
+      const title = document.getElementById('title');
 
-      const content = `<root>${this.post.content}</root>`;
+      const content = `<root>${post.content}</root>`;
       const xmlDoc = new DOMParser().parseFromString(content, 'text/xml');
-      const children = Array.from(xmlDoc.childNodes);
+      const children = Array.from(xmlDoc.firstChild.childNodes);
 
       for(let childNode of children){
-        let nodeName = childNode.nodeName.toLowerCase();
+        let tagName = childNode.nodeName.toLowerCase();
         let element;
 
-        if(childNode.nodeType === 2){
-          element = elements.paragraph.cloneNode(true);
-          element.textContent = childNode;
-        } else if(nodeName === "code"){
-          element = elements.code.cloneNode(true);
+        if(tagName === "#text") {
+          element = paragraph.cloneNode(true);
+          element.textContent = childNode.textContent;
+        } else if(tagName === "code") {
+          element = code.cloneNode(true);
 
           const lines = childNode.textContent.split("\n");
 
           lines.forEach(v => {
-            const lineElement = element.querySelector('li').cloneNode(true);
+            const lineElement = element.querySelector('div.code__item').cloneNode(true);
             lineElement.hidden = false;
             lineElement.textContent = v;
 
-            element.append(lineElement);
+            element.querySelector('.code__container').append(lineElement);
           });
-        } else if(nodeName === "title"){
-          element = elements.title.cloneNode(true);
+
+        } else if(tagName === "title") {
+          element = title.cloneNode(true);
           element.textContent = childNode.textContent;
         }
 
-        if(element instanceof Node){
-          elements.container.append(element);
+        if (element != null) {
+           container.append(element);
         }
       }
+    },
+    navigateToCategories() {
+      this.$router.push(`/category/` + encodeURIComponent(this.post.category));
     }
-  }
+  },
 }
 </script>
