@@ -26,6 +26,16 @@ export default {
         disabled: false,
         href: '/posts',
       },
+      {
+        text: 'Sign up',
+        disabled: false,
+        href: '/auth/signup'
+      },
+      {
+        text: 'Sign in',
+        disabled: false,
+        href: '/auth/signin'
+      }
     ],
   }),
   components: {
