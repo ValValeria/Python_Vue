@@ -1,45 +1,58 @@
 <template>
   <div class="contacts">
     <SimpleSection title="Contacts">
-      <v-layout justify-center class="w-100">
-        <v-flex xs12 md6>
-          <v-form
-            ref="form"
-            v-model="valid"
-            lazy-validation
-          >
-            <v-text-field
-              v-model="email"
-              :rules="emailRules"
-              label="E-mail"
-              required
-            ></v-text-field>
-
-            <v-text-field
-              v-model="message"
-              :counter="10"
-              :rules="messageRule"
-              label="Name"
-              required
-            ></v-text-field>
-
-            <v-btn
-              color="error"
-              class="mr-4"
-              @click="reset"
-            >
-              Reset Form
-            </v-btn>
-
-            <v-btn
-              color="warning"
-              @click="submit"
-            >
-              Submit
-            </v-btn>
-          </v-form>
-        </v-flex>
-      </v-layout>
+      <div class="w-100 center">
+        <div class="contacts__info">
+          <v-card flat class="w-100 center">
+            <v-card-text>
+              <v-form
+                class="contacts__form"
+                ref="form"
+                v-model="valid"
+                lazy-validation
+              >
+                <v-layout justify-center column class="w-100">
+                  <v-flex xs10 md6>
+                    <v-text-field
+                      v-model="email"
+                      :rules="emailRules"
+                      label="E-mail"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex xs10 md6>
+                    <v-textarea
+                      v-model="message"
+                      :counter="200"
+                      :rows="5"
+                      :rules="messageRules"
+                      label="Name"
+                      required
+                    ></v-textarea>
+                  </v-flex>
+                  <v-flex  xs10 md4 align-self-center class="mb-2 mt-4">
+                    <v-btn
+                      color="error"
+                      @click="reset"
+                      width="150"
+                    >
+                      Reset
+                    </v-btn>
+                  </v-flex>
+                  <v-flex  xs10 md4  align-self-center>
+                    <v-btn
+                      @click="submit"
+                      width="150"
+                    >
+                      Submit
+                    </v-btn>
+                  </v-flex>
+                </v-layout>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </div>
+      </div>
     </SimpleSection>
   </div>
 </template>
@@ -65,13 +78,19 @@ export default {
   },
   components: {SimpleSection},
   methods: {
-    reset () {
+    reset() {
       this.$refs.form.reset()
+    },
+    submit() {
+
     }
   }
 }
 </script>
 
 <style scoped>
-
+.contacts__form, .contacts__info{
+  max-width: 600px;
+  width: 100%;
+}
 </style>
