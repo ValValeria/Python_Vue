@@ -1,11 +1,11 @@
 <template>
-  <v-footer v-if="show" app>
+  <v-footer v-if="show">
     <v-card
       flat
       width="100%"
       class="text-center">
       <v-card-text class="white--text">
-        {{getTime()}} — <strong>DEV </strong>Prog
+        {{getTime()}} — <b>DEV </b>Prog
       </v-card-text>
     </v-card>
   </v-footer>

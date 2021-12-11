@@ -1,4 +1,4 @@
-export const LOGIN_MUTATION = Symbol();
+export const LOGIN_MUTATION = "login";
 
 export const state = () => ({
    user: {username: '', email: '', id: 0, password: ''},

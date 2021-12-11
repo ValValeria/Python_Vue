@@ -13,6 +13,39 @@ from django.db.models import Q
 from django.db import models
 import django.utils.timezone
 
+class PostsSortByCategory(ListView):
+   responseObj = ResponseObject()
+   categories = (
+           ("js", "javascript"),
+           ("python", "python"),
+           ("ml", "machine learning"),
+           ("android", "android development"),
+           ("other", "other"),
+       )
+
+   def get(self, request, *args, **kwargs):
+       category = list(filter(lambda v: v[1] == kwargs['category'], self.categories))[0]
+       page = request.GET.get('page', '')
+       per_page = request.GET.get('per_page', '')
+
+       if page.isdigit() and per_page.isdigit() and category and category[0]:
+          posts = Post.objects.filter(category=category[0]).order_by('id').values()
+
+          if category == "all":
+             posts = Post.objects.all().order_by('id').values()
+
+          posts = Paginator(posts, int(per_page))
+          page_obj = posts.page(int(page))
+          num_pages = posts.num_pages if posts.num_pages else 0
+
+          self.responseObj.add_results(list(page_obj.object_list))
+          self.responseObj.add_info({"all_pages": num_pages, "results": posts.count})
+
+          return JsonResponse(self.responseObj.data_list, safe=False)
+
+       return HttpResponseBadRequest()
+
+
 
 # Create your views here.
 class PostsView(ListView):

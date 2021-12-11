@@ -12,6 +12,14 @@
                 lazy-validation
               >
                 <v-layout justify-center column class="w-100">
+                  <v-flex xs10 md6 v-if="username">
+                    <v-text-field
+                      v-model="username"
+                      label="Username"
+                      required
+                      readonly
+                    ></v-text-field>
+                  </v-flex>
                   <v-flex xs10 md6>
                     <v-text-field
                       v-model="email"
@@ -74,9 +82,17 @@ export default {
         v => !!v || 'Message is required',
         v => /\d{10,200}/.test(v) || 'Message length must be between 10 and 200 characters',
       ],
+      username: ""
     }
   },
   components: {SimpleSection},
+  mounted() {
+    const state = this.$store.state;
+
+    if(state.isAuth && state.user.username){
+       this.username = state.user.username;
+    }
+  },
   methods: {
     reset() {
       this.$refs.form.reset()

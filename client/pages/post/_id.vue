@@ -12,7 +12,7 @@
         </div>
       </v-alert>
     </div>
-    <Navigation v-show="shouldShow"/>
+    <Navigation v-show="shouldShow" :items="items"/>
     <SimpleSection :title="post.title" v-show="shouldShow">
       <div class="w-100">
         <div class="post__container w-100">
@@ -69,12 +69,25 @@ import {showSnackbar$} from "../../subjects";
 import {first, interval} from "rxjs";
 import ComponentSection from "../../simple_layouts/component-section";
 import Navigation from "../../components/navigation";
+import prismjs from 'prismjs';
 
 export default {
   data: function(){
     return {
       post: {},
-      shouldShow: false
+      shouldShow: false,
+      items: [
+        {
+          text: 'Home',
+          disabled: false,
+          href: '/',
+        },
+        {
+          text: 'Posts',
+          disabled: false,
+          href: '/posts'
+        }
+      ],
     }
   },
   components: {Navigation, SimpleSection, ComponentSection},
@@ -95,13 +108,16 @@ export default {
         });
     }
   },
-  async beforeCreate(){
+  async mounted(){
     if(process.client) {
-      document.addEventListener("readystatechange", () => {
+      const checkDOMState = () => {
         if (document.readyState === "complete"){
           this.loadContent(this.post);
         }
-      });
+      };
+
+      checkDOMState();
+      document.addEventListener("readystatechange", checkDOMState);
     }
   },
   watch: {
@@ -130,14 +146,22 @@ export default {
           element = paragraph.cloneNode(true);
           element.textContent = childNode.textContent;
         } else if(tagName === "code") {
+          const language = code.getAttribute("lang") || "javascript";
           element = code.cloneNode(true);
 
           const lines = childNode.textContent.split("\n");
 
           lines.forEach(v => {
+            const htmlStringCode = prismjs.highlight(v, Prism.languages[language], language);
             const lineElement = element.querySelector('div.code__item').cloneNode(true);
+            const htmlCode = new DOMParser()
+                                .parseFromString(htmlStringCode, "text/html")
+                                .querySelector('body')
+                                .childNodes;
+
             lineElement.hidden = false;
-            lineElement.textContent = v;
+
+            Array.from(htmlCode).forEach(v => lineElement.appendChild(v));
 
             element.querySelector('.code__container').append(lineElement);
           });
@@ -157,5 +181,12 @@ export default {
       this.$router.push(`/category/` + encodeURIComponent(this.post.category));
     }
   },
+  head() {
+    return {
+      title() {
+        return "Post";
+      }
+    }
+  }
 }
 </script>

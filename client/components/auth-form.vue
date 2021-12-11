@@ -17,6 +17,7 @@
             :rules="rules"
             :counter="10"
             label="Email"
+            type="email"
             required></v-text-field>
         </v-flex>
         <v-flex xs12 md12>
@@ -24,6 +25,7 @@
             v-model="password"
             :rules="rules"
             :counter="10"
+            type="password"
             label="Password"
             required></v-text-field>
         </v-flex>
@@ -37,7 +39,7 @@
 
 <script>
 import SimpleSection from "../simple_layouts/simple-section";
-import {mapMutations} from "vuex";
+import { mapMutations } from 'vuex'
 import {LOGIN_MUTATION} from "../store";
 
 export default {
@@ -60,10 +62,12 @@ export default {
     }
   },
   components: {
-    SimpleSection
+    SimpleSection,
+    ...mapMutations([
+      LOGIN_MUTATION
+    ])
   },
   methods:{
-    ...mapMutations(LOGIN_MUTATION)
   }
 }
 </script>

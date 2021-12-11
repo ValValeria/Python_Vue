@@ -2,7 +2,7 @@
   <v-carousel v-model="model"
               class="w-100"
               height="400"
-              v-if="shouldShow ? shouldShow : true">
+              v-if="shouldShow ? shouldShow : false">
     <v-carousel-item
       v-for="image in images"
       :key="image.title"
@@ -10,6 +10,7 @@
       <v-img
         :src="image.image"
         max-width="100%"
+        @error="handleError()"
         height="400">
         <template v-slot:placeholder>
           <v-row
@@ -58,6 +59,9 @@ export default {
         this.shouldShow = true;
       }
     },
+    async handleError() {
+      this.shouldShow = false;
+    }
   }
 }
 </script>

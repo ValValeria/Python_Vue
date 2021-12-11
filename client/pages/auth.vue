@@ -8,7 +8,8 @@
               <v-flex xs12 md12>
                 <v-tabs centered
                         class="w-100"
-                        v-model="tab">
+                        v-model="tab"
+                        @change="handleUrlChange(tab === 0 ? 1 : 0)">
                   <v-tab>Login</v-tab>
                   <v-tab>Sign up</v-tab>
                 </v-tabs>
@@ -27,18 +28,29 @@
 </template>
 
 <script>
-import SimpleSection from "../../simple_layouts/simple-section";
-import {mapMutations} from "vuex";
-import {LOGIN_MUTATION} from "../../store";
-import AuthForm from "../../components/auth-form";
+import SimpleSection from "../simple_layouts/simple-section";
+import AuthForm from "../components/auth-form";
 
 export default {
   data: function(){
     return {
-      tab: null
+      tab: 0
     };
   },
-  components: {AuthForm, SimpleSection}
+  components: {AuthForm, SimpleSection},
+  async fetch({params}){
+    this.tab = params.type;
+  },
+  middleware(context) {
+    const req = context.req;
+    const store = context.store;
+    const redirect = context.redirect;
+
+    if(store.isAuth) {
+      const url = req.headers.referer || "/";
+      return redirect(url);
+    }
+  },
 }
 </script>
 
