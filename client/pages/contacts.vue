@@ -12,12 +12,11 @@
                 lazy-validation
               >
                 <v-layout justify-center column class="w-100">
-                  <v-flex xs10 md6 v-if="username">
+                  <v-flex xs10 md6>
                     <v-text-field
                       v-model="username"
                       label="Username"
                       required
-                      readonly
                     ></v-text-field>
                   </v-flex>
                   <v-flex xs10 md6>
@@ -31,10 +30,8 @@
                   <v-flex xs10 md6>
                     <v-textarea
                       v-model="message"
-                      :counter="200"
                       :rows="5"
-                      :rules="messageRules"
-                      label="Name"
+                      label="Message"
                       required
                     ></v-textarea>
                   </v-flex>
@@ -67,6 +64,7 @@
 
 <script>
 import SimpleSection from "../simple_layouts/simple-section";
+import {showSnackbar$} from "../subjects";
 export default {
   name: "contacts",
   data: function() {
@@ -77,10 +75,6 @@ export default {
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-      ],
-      messageRules: [
-        v => !!v || 'Message is required',
-        v => /\d{10,200}/.test(v) || 'Message length must be between 10 and 200 characters',
       ],
       username: ""
     }
@@ -97,8 +91,32 @@ export default {
     reset() {
       this.$refs.form.reset()
     },
-    submit() {
+    async submit() {
+      let message;
 
+      if(this.message.length > 10 && this.message.length < 200) {
+        const formData = new FormData();
+        formData.append("username", this.username);
+        formData.append("email", this.email);
+        formData.append("message", this.message);
+
+        const response = await fetch('/api/letter', {
+          method: 'POST',
+          body: formData
+        });
+
+        let message;
+
+        if(response.ok) {
+          message = "The letter is delivered to our admin";
+        } else {
+          message = "Internal error"
+        }
+      } else {
+        message = "The size of message must be between 10 and 200 characters";
+      }
+
+      showSnackbar$.next(message);
     }
   }
 }

@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 
-from .models import Post, Comment, Carousel
+from .models import Post, Comment, Carousel, Letter
 from django.utils.html import format_html
+
 
 admin.site.unregister(User)
 
@@ -11,10 +12,16 @@ class CommentInstanceInline(admin.TabularInline):
     model = Comment
 
 
+@admin.register(Letter)
+class LetterAdmin(admin.ModelAdmin):
+    list_display = ("id", "username", "created_at", "status")
+    search_fields = ("message", "username")
+
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('id', 'comment', 'time', 'post_link', "user")
-    search_fields = ('content', )
+    search_fields = ('content',)
 
     def comment(self, obj):
         content = obj.content.split(" ")
@@ -22,7 +29,8 @@ class CommentAdmin(admin.ModelAdmin):
         return short_content
 
     def user(self, obj):
-        return format_html('<a href={} class="btn-link">{}</a>', "/admin/auth/user/{}/change/".format(obj.user.id), obj.user.username)
+        return format_html('<a href={} class="btn-link">{}</a>', "/admin/auth/user/{}/change/".format(obj.user.id),
+                           obj.user.username)
 
     def post_link(self, obj):
         return format_html('<a href={} class="btn-link">View post</a>', "/admin/auth/post/{}/change/".format(obj.id));

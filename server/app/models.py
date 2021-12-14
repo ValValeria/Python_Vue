@@ -1,5 +1,29 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.timezone import now
+
+
+class Letter(models.Model):
+    username = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    message = models.TextField(max_length=300)
+    created_at = models.DateTimeField(default=now())
+    status = models.CharField(max_length=100,
+                              choices=(("approved", "approved"), ("unapproved", "unapproved")),
+                              default="unapproved")
+
+    def __str__(self):
+        letters = enumerate(self.message.split(" ")[::8])
+        result = list()
+
+        for index, letter in letters:
+            if index > 10 or len(letter) > 10:
+                result.append(letter[::10])
+                break
+            else:
+                result.append(letter)
+
+        return " ".join(result)
 
 
 class Post(models.Model):

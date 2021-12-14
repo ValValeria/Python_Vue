@@ -1,6 +1,12 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Comment, Post
+from .models import Comment, Post, Letter
+
+
+class LetterForm(forms.Form):
+    username = forms.CharField(max_length=50)
+    email = forms.CharField(max_length=50)
+    message = forms.CharField(max_length=300)
 
 
 class CommentForm(forms.Form):

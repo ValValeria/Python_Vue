@@ -1,10 +1,12 @@
+import datetime
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic.list import ListView
 
-from .forms import CommentForm
-from .models import Post, Comment, Carousel
+from .forms import CommentForm, LetterForm
+from .models import Post, Comment, Carousel, Letter
 from django.views.generic.detail import DetailView
 from django.core.paginator import Paginator
 from .classes import ResponseObject
@@ -13,38 +15,56 @@ from django.db.models import Q
 from django.db import models
 import django.utils.timezone
 
+
+class LettersView(ListView):
+    responseObj = ResponseObject()
+
+    def post(self, request, *args, **kwargs):
+        form = LetterForm(request.POST)
+
+        if form.is_valid():
+            letter = Letter()
+            letter.message = form.cleaned_data['message']
+            letter.email = form.cleaned_data['email']
+            letter.username = form.cleaned_data['username']
+            letter.save()
+
+            self.responseObj.status = "ok"
+
+        return JsonResponse(self.responseObj.data_list, safe=False)
+
+
 class PostsSortByCategory(ListView):
-   responseObj = ResponseObject()
-   categories = (
-           ("js", "javascript"),
-           ("python", "python"),
-           ("ml", "machine learning"),
-           ("android", "android development"),
-           ("other", "other"),
-       )
+    responseObj = ResponseObject()
+    categories = (
+        ("js", "javascript"),
+        ("python", "python"),
+        ("ml", "machine learning"),
+        ("android", "android development"),
+        ("other", "other"),
+    )
 
-   def get(self, request, *args, **kwargs):
-       category = list(filter(lambda v: v[1] == kwargs['category'], self.categories))[0]
-       page = request.GET.get('page', '')
-       per_page = request.GET.get('per_page', '')
+    def get(self, request, *args, **kwargs):
+        category = list(filter(lambda v: v[1] == kwargs['category'], self.categories))[0]
+        page = request.GET.get('page', '')
+        per_page = request.GET.get('per_page', '')
 
-       if page.isdigit() and per_page.isdigit() and category and category[0]:
-          posts = Post.objects.filter(category=category[0]).order_by('id').values()
+        if page.isdigit() and per_page.isdigit() and category and category[0]:
+            posts = Post.objects.filter(category=category[0]).order_by('id').values()
 
-          if category == "all":
-             posts = Post.objects.all().order_by('id').values()
+            if category == "all":
+                posts = Post.objects.all().order_by('id').values()
 
-          posts = Paginator(posts, int(per_page))
-          page_obj = posts.page(int(page))
-          num_pages = posts.num_pages if posts.num_pages else 0
+            posts = Paginator(posts, int(per_page))
+            page_obj = posts.page(int(page))
+            num_pages = posts.num_pages if posts.num_pages else 0
 
-          self.responseObj.add_results(list(page_obj.object_list))
-          self.responseObj.add_info({"all_pages": num_pages, "results": posts.count})
+            self.responseObj.add_results(list(page_obj.object_list))
+            self.responseObj.add_info({"all_pages": num_pages, "results": posts.count})
 
-          return JsonResponse(self.responseObj.data_list, safe=False)
+            return JsonResponse(self.responseObj.data_list, safe=False)
 
-       return HttpResponseBadRequest()
-
+        return HttpResponseBadRequest()
 
 
 # Create your views here.
@@ -212,4 +232,3 @@ class CarouselView(ListView):
         self.responseObj.add_results(images)
 
         return JsonResponse(self.responseObj.data_list, safe=False)
-
