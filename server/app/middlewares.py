@@ -1,7 +1,7 @@
 from json import loads, JSONDecodeError
 from django.contrib.auth import login
-import sys
 from django.contrib.auth.models import User
+import sys
 
 
 class CorsMiddleware:

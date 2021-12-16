@@ -8,8 +8,7 @@
               <v-flex xs12 md12>
                 <v-tabs centered
                         class="w-100"
-                        v-model="tab"
-                        @change="handleUrlChange(tab === 0 ? 1 : 0)">
+                        v-model="tab">
                   <v-tab>Login</v-tab>
                   <v-tab>Sign up</v-tab>
                 </v-tabs>

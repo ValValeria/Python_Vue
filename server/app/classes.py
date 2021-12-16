@@ -22,11 +22,18 @@ class ResponseObject:
     def add_info(self, data):
         self.__data["info"].update(data)
 
+    def add_errors(self, data):
+        if isinstance(data, dict):
+            self.__errors.append(data)
+        else:
+            self.__errors.extend(data)
+
     @property
     def data_list(self):
         data = {
             'data': dict(self.__data),
-            'errors': list(self.__errors)
+            'errors': list(self.__errors),
+            'status': self.status,
         }
 
         return data

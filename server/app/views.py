@@ -1,19 +1,69 @@
 import datetime
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic.list import ListView
-
-from .forms import CommentForm, LetterForm
+from .forms import CommentForm, LetterForm, UserForm
 from .models import Post, Comment, Carousel, Letter
-from django.views.generic.detail import DetailView
 from django.core.paginator import Paginator
 from .classes import ResponseObject
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseBadRequest
 from django.db.models import Q
-from django.db import models
-import django.utils.timezone
+
+
+class LoginView(UserPassesTestMixin, ListView):
+    responseObj = ResponseObject()
+
+    def test_func(self):
+        return not self.request.user.is_authenticated
+
+    def post(self, request, *args, **kw):
+        form = UserForm(True)
+
+        if form.is_valid():
+            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+
+            if user is None:
+                self.responseObj.add_errors(["You are not in our database"])
+            else:
+                login(request, user)
+                self.responseObj.status = "ok"
+        else:
+            self.responseObj.add_info(form.errors)
+
+        return JsonResponse(self.responseObj.data_list, safe=False)
+
+
+class SignUpView(UserPassesTestMixin, ListView):
+    responseObj = ResponseObject()
+
+    def test_func(self):
+        return not self.request.user.is_authenticated
+
+    def post(self, request, *args, **kw):
+        form = UserForm(False)
+
+        if form.is_valid():
+            user = User.objects.create_user(form.cleaned_data["username"], form.cleaned_data["email"], form.cleaned_data["password"])
+            self.responseObj.add_info({id: user.id})
+            self.responseObj.status = "ok"
+        else:
+            self.responseObj.add_errors(form.errors)
+
+        return JsonResponse(self.responseObj.data_list, safe=False)
+
+
+class LogoutView(UserPassesTestMixin, ListView):
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def get(self, request, *args, **kw):
+        logout(request)
+
+        return redirect('/')
 
 
 class LettersView(ListView):
