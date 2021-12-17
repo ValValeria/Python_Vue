@@ -1,4 +1,4 @@
-#DEV_PROG
+# DEV_PROG
 I have decided to create an app, where I can create my own blog.
 
 ![img](./screenshot/screen1.png)
@@ -7,12 +7,12 @@ Home Page
 ![img](./screenshot/screen2.png)
 Contacts page
 
-##Technologies
+## Technologies
 * Python/Django
 * Vue js
 * Nuxt js
 
-##How to run the app
+## How to run the app
 In the terminal, type the following:
 ```aidl
 cd server
