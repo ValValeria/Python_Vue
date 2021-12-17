@@ -47,7 +47,8 @@ class SignUpView(UserPassesTestMixin, ListView):
         form = UserForm(False)
 
         if form.is_valid():
-            user = User.objects.create_user(form.cleaned_data["username"], form.cleaned_data["email"], form.cleaned_data["password"])
+            user = User.objects.create_user(form.cleaned_data["username"], form.cleaned_data["email"],
+                                            form.cleaned_data["password"])
             self.responseObj.add_info({id: user.id})
             self.responseObj.status = "ok"
         else:
@@ -95,15 +96,21 @@ class PostsSortByCategory(ListView):
     )
 
     def get(self, request, *args, **kwargs):
-        category = list(filter(lambda v: v[1] == kwargs['category'], self.categories))[0]
+        category = request.GET.get('category', '')
+
+        if category != "all":
+            category = list(filter(lambda v: v[1] == category, self.categories))[0]
+
         page = request.GET.get('page', '')
         per_page = request.GET.get('per_page', '')
 
-        if page.isdigit() and per_page.isdigit() and category and category[0]:
-            posts = Post.objects.filter(category=category[0]).order_by('id').values()
+        self.responseObj.setup_data()
 
+        if page.isdigit() and per_page.isdigit() and category and category[0]:
             if category == "all":
                 posts = Post.objects.all().order_by('id').values()
+            else:
+                posts = Post.objects.filter(category__iexact=category[0]).order_by('id').values()
 
             posts = Paginator(posts, int(per_page))
             page_obj = posts.page(int(page))
@@ -252,7 +259,7 @@ class SearchView(ListView):
 
         self.responseObj.setup_data()
 
-        if page.isdigit() and per_page.isdigit() and 3 < len(word) < 20:
+        if page.isdigit() and per_page.isdigit() and 0 <= len(word) < 20:
             posts = Post.objects.filter(Q(title__icontains=word) | Q(category__icontains=word))
             posts = Paginator(posts.order_by('id').values(), per_page)
             page_obj = posts.page(int(page))

@@ -23,7 +23,7 @@ urlpatterns = [
     re_path(r'^api/signup', SignUpView.as_view()),
     re_path(r'^api/logout', LogoutView.as_view()),
     re_path(r'^api/posts/(?P<id>\d+)', PostView.as_view()),
-    re_path(r'^api/posts/(?P<category>\w+)', PostsSortByCategory.as_view()),
+    re_path(r'^api/category', PostsSortByCategory.as_view()),
     re_path(r'^api/posts', PostsView.as_view()),
     re_path(r'^api/letter', LettersView.as_view()),
     re_path(r'^api/likes', AddLikesView.as_view()),

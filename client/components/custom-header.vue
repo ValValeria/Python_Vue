@@ -7,16 +7,16 @@
   >
     <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
-    <v-toolbar-title class="text--black"><b>Dev </b>Prog</v-toolbar-title>
+    <v-toolbar-title
+      class="text--black"
+      @click="$router.push('/')">
+      <b>Dev </b>Prog
+    </v-toolbar-title>
 
     <v-spacer></v-spacer>
 
-    <v-btn icon>
+    <v-btn icon @click="$router.push('/search')" class="mr-4">
       <v-icon>mdi-magnify</v-icon>
-    </v-btn>
-
-    <v-btn icon>
-      <v-icon>mdi-dots-vertical</v-icon>
     </v-btn>
   </v-app-bar>
 </template>

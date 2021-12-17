@@ -27,8 +27,6 @@ export default {
         {path: "/posts", title: "Posts"},
         {path: "/categories", title: "Categories"},
         {path: "/contacts", title: "Contacts"},
-        {path: '/auth', title: "Authenticate"},
-        {path: '/about', title: "About me"},
       ]
     }
   },
