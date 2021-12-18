@@ -4,9 +4,6 @@ I have decided to create an app, where I can create my own blog.
 ![img](./screenshot/screen1.png)
 Home Page
 
-![img](./screenshot/img.png)
-Category Page
-
 ![img](./screenshot/screen2.png)
 Contacts page
 
