@@ -16,7 +16,7 @@
              </p>
            </v-flex>
            <v-flex md3 xs3>
-             <v-btn outlined id="btn" block @click="navigateToPosts()">
+             <v-btn outlined rounded id="btn" block @click="navigateToPosts()" color="orange" class="mt-2">
                Learn more
              </v-btn>
            </v-flex>

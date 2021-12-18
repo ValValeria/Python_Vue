@@ -27,7 +27,6 @@
 <script>
 import CustomFooter from "../components/custom-footer";
 import Header from "../components/custom-header";
-import Banner from "../components/banner";
 import '../assets/styles.scss';
 import NavigationDrawer from "../components/navigation-drawer";
 
@@ -43,7 +42,6 @@ export default {
     NavigationDrawer,
     CustomFooter,
     Header,
-    Banner
   }
 }
 </script>

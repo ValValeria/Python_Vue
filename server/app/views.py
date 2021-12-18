@@ -289,3 +289,12 @@ class CarouselView(ListView):
         self.responseObj.add_results(images)
 
         return JsonResponse(self.responseObj.data_list, safe=False)
+
+
+class NotFoundView(ListView):
+    responseObj = ResponseObject()
+
+    def get(self, request, *args, **kw):
+        self.responseObj.errors.append("Page is not found")
+
+        return JsonResponse(self.responseObj.data_list, safe=False)

@@ -1,20 +1,17 @@
 <template>
   <div class="category">
     <SimpleSection title="Category">
-      <v-layout justify-center
-                align-center
-                class="mb-4 w-100">
-         <v-flex md3 xs12
-                 v-for="category in categories"
-                 :key="category.tag"
-                 class="ml-2 mb-2 mr-1">
-            <v-card @click="loadByCategory(category)">
-              <v-card-text class="text-lg-h5 text-center">
+      <div class="category__items mb-7 w-100">
+         <div v-for="category in categories"
+              :key="category.tag"
+               class="w-100">
+            <v-btn @click="loadByCategory(category)" color="orange" outlined class="w-100">
+              <div class="text-lg-h5 text-center">
                  {{category.title}}
-              </v-card-text>
-            </v-card>
-         </v-flex>
-      </v-layout>
+              </div>
+            </v-btn>
+         </div>
+      </div>
       <v-layout class="w-100"
                 justify-center>
         <v-flex xs12 md12 v-for="post in posts" :key="post.title" class="w-100">
@@ -136,6 +133,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.category__items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: auto;
+  grid-gap: 0.5rem;
+}
 </style>

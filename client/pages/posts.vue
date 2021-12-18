@@ -1,29 +1,38 @@
 <template>
 <div class="posts w-100">
   <SimpleSection title="Posts">
-       <v-layout column class="w-100" v-if="!$fetchState.pending && !$fetchState.error">
+       <v-layout column
+                 class="w-100"
+                 justify-center>
          <v-flex xs12 md12 class="mb-6 w-100">
            <PostsCarousel page_type="posts"/>
          </v-flex>
-         <v-flex xs12 md12 v-for="post in posts" :key="getRandom()" class="w-100">
-           <PostCard
-             :title="post.title"
-             :image="post.image"
-             :content="post.content"
-             :category="post.category"
-             :id="post.id"
-           />
+         <template v-if="posts.length && !$fetchState.pending">
+           <v-flex xs12 md12 v-for="post in posts" :key="getRandom()" class="w-100">
+             <PostCard
+               :title="post.title"
+               :image="post.image"
+               :content="post.content"
+               :category="post.category"
+               :id="post.id"
+             />
+           </v-flex>
+           <v-flex xs12 md4 v-if="all_pages > 1" class="mt-6" align-self-center>
+             <v-btn @click="nextPage()" outlined>More posts</v-btn>
+           </v-flex>
+         </template>
+         <v-flex xs12 md4
+                 v-else-if="$fetchState.pending || $fetchState.error"
+                 align-self-center>
+           <v-progress-circular
+             :size="50"
+             color="amber"
+             indeterminate
+           ></v-progress-circular>
          </v-flex>
-         <v-flex xs12 md4 v-if="all_pages > 1" class="mt-6" align-self-center>
-            <v-btn @click="nextPage()" outlined>More posts</v-btn>
+         <v-flex xs12 md4 v-if="!$fetchState.pending && !posts.length && !$fetchState.error">
+           <NoResults/>
          </v-flex>
-       </v-layout>
-       <v-layout column class="w-100" justify-center align-center v-else>
-         <v-progress-circular
-           :size="50"
-           color="amber"
-           indeterminate
-         ></v-progress-circular>
        </v-layout>
   </SimpleSection>
 </div>
@@ -33,6 +42,7 @@
 import SimpleSection from '../simple_layouts/simple-section';
 import PostCard from "../components/post-card";
 import PostsCarousel from "../components/posts-carousel";
+import NoResults from "../components/no-results";
 
 export default {
   data(){
@@ -59,6 +69,7 @@ export default {
     }
   },
   components:{
+    NoResults,
     PostsCarousel,
     PostCard,
     SimpleSection

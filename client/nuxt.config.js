@@ -6,8 +6,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - client',
-    title: 'client',
+    titleTemplate: '%s - Build your own app',
+    title: 'Dev Prog',
     htmlAttrs: {
       lang: 'en'
     },
